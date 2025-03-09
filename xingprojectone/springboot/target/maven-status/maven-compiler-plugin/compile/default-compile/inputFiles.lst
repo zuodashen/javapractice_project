@@ -1,0 +1,15 @@
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/SpringbootApplication.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/common/CorsConfig.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/common/Result.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/controller/AdminController.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/controller/EmployeeController.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/controller/Webcontroller.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/entity/Account.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/entity/Admin.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/entity/Employee.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/exception/CustomException.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/exception/GlobalExceptionHandler.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/mapper/AdminMapper.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/mapper/EmployeeMapper.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/service/AdminService.java
+/Users/ruihangli/Desktop/java project/xingprojectone/springboot/src/main/java/com/example/service/EmployeeService.java
