@@ -39,12 +39,12 @@ public class Webcontroller {
            result = adminService.login(account);
        } else if ("EMP".equals(account.getRole())){
            result = employeeService.login(account);
+       }else {
+           throw new CustomException("500","角色错误非法输入");
        }
 //       Employee loggedInEmployee = employeeService.login(account);
          return Result.success(result);
         }
-
-
     @PostMapping("/register")
     public Result register(@RequestBody Employee employee) {
         if (employee == null) {
@@ -53,9 +53,24 @@ public class Webcontroller {
         employeeService.register(employee);
         return Result.success();
     }
+    /**
+     * 修改密码
+     * @param
+     * @return
+     */
+    @PutMapping("/updatePassword")
+    public Result updatePassword(@RequestBody Account account) {
+        if("ADMIN".equals(account.getRole())){
+            adminService.updatePassword(account);
+        }else if("EMP".equals(account.getRole())) {
+            employeeService.updatePassword(account);
+        }else {
+            throw new CustomException("500","角色错误非法输入");
+        }
+        return Result.success();
+    }
 
-
-}
+    }
 
 
 

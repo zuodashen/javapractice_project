@@ -6,6 +6,16 @@ public class Account {
     private String password;
     private String role;
     private String name;
+    private String newPassword;
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
 
     public Integer getId() {
         return id;

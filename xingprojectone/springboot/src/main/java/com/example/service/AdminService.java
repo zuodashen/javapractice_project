@@ -85,7 +85,24 @@ public class AdminService {
         }
         return dbAdmin;
     }
-
+    public void updatePassword(Account account) {
+        Integer id = account    public void updatePassword(Account account) {
+            Integer id = account.getId();
+            Admin admin = this.selectById(id);
+            if(!admin.getPassword().equals(account.getPassword())){
+                throw new CustomException("500","旧密码错误");
+            }
+            admin.setPassword(account.getNewPassword());
+            this.update(admin);
+        }
+.getId();
+        Admin admin = this.selectById(id);
+        if(!admin.getPassword().equals(account.getPassword())){
+            throw new CustomException("500","旧密码错误");
+        }
+        admin.setPassword(account.getNewPassword());
+        this.update(admin);
+    }
 
 
 

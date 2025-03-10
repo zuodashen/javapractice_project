@@ -44,6 +44,12 @@
             个人信息
           </el-menu-item>
 
+          <el-menu-item index="/manager/password">
+            <el-icon><Lock/></el-icon>
+            修改密码
+          </el-menu-item>
+
+
           <el-menu-item @click="logout">
             <el-icon><switch-button /></el-icon>
             退出登录
