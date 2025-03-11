@@ -10,7 +10,7 @@
 
       <div style="flex: 1"></div>
         <div style="width: fit-content;display: flex;align-items: center;padding-right: 10px">
-          <img src="@/assets/头像.png" alt="" style="width: 40px;height: 40px">
+          <img :src="data.user.avatar ||'https://i0.hdslb.com/bfs/sycp/creative_img/202503/306a1b0cb3aab8b6e2843523ced602e5.jpg' " alt="" style="width: 40px;height: 40px;border-radius: 50%">
           <span style="color: white;margin-left: 5px">{{data.user.name}}</span>
         </div>
     </div>
@@ -25,9 +25,17 @@
             系统首页
           </el-menu-item>
 
+
+
+
           <el-menu-item index="/manager/data">
             <el-icon><DataAnalysis/></el-icon>
             数据统计
+          </el-menu-item>
+
+          <el-menu-item index="/manager/article">
+            <el-icon><Document/></el-icon>
+            文章管理
           </el-menu-item>
 
           <el-sub-menu index="1">
@@ -43,6 +51,12 @@
             <el-icon><UserFilled /></el-icon>
             个人信息
           </el-menu-item>
+
+          <el-menu-item index="/manager/password">
+            <el-icon><Lock/></el-icon>
+            修改密码
+          </el-menu-item>
+
 
           <el-menu-item @click="logout">
             <el-icon><switch-button /></el-icon>
@@ -65,7 +79,17 @@
 
 
 <script setup>
-import {Back, DataAnalysis, House, InfoFilled, Switch, SwitchButton, User, UserFilled} from "@element-plus/icons-vue";
+import {
+  Back,
+  DataAnalysis, Document,
+  House,
+  InfoFilled,
+  Reading,
+  Switch,
+  SwitchButton,
+  User,
+  UserFilled
+} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
 import {reactive,onMounted} from "vue";
 import {ElMessage} from "element-plus";

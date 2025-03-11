@@ -40,6 +40,18 @@ const router = createRouter({
           name: 'person', // 修改为唯一的名称
           meta:{title:'个人信息页面'},
           component: () => import('../views/Person.vue') },
+
+        {
+          path: 'article',
+          name: 'article', // 修改为唯一的名称
+          meta:{title:'文章信息'},
+          component: () => import('../views/Article.vue') },
+
+    {
+      path: 'password',
+      name: 'password', // 修改为唯一的名称
+      meta:{title:'修改密码页面'},
+      component: () => import('../views/Password.vue') },
       ]},
 
     {path:'/login',name:'Login', meta:{title: '登录系统'},component: () =>import("../views/Login.vue")},

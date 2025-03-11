@@ -1,6 +1,7 @@
 package com.example.service;
 import cn.hutool.core.util.StrUtil;
 import com.example.entity.Account;
+import com.example.entity.Admin;
 import com.example.entity.Employee;
 import com.example.exception.CustomException;
 import com.example.mapper.EmployeeMapper;
@@ -88,7 +89,15 @@ public class EmployeeService {
             this.add(employee);
     }
 
-
+    public void updatePassword(Account account) {
+        Integer id = account.getId();
+        Employee employee = this.selectById(id);
+        if(!employee.getPassword().equals(account.getPassword())){
+            throw new CustomException("500","旧密码错误");
+        }
+        employee.setPassword(account.getNewPassword());
+        this.update(employee);
+    }
 
 
 //    public List<Employee> selectList(Employee employee) {
