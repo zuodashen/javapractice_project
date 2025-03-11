@@ -7,6 +7,16 @@ public class Account {
     private String role;
     private String name;
     private String newPassword;
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
 
     public String getNewPassword() {
         return newPassword;

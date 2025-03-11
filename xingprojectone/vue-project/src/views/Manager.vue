@@ -10,7 +10,7 @@
 
       <div style="flex: 1"></div>
         <div style="width: fit-content;display: flex;align-items: center;padding-right: 10px">
-          <img src="@/assets/头像.png" alt="" style="width: 40px;height: 40px">
+          <img :src="data.user.avatar ||'https://i0.hdslb.com/bfs/sycp/creative_img/202503/306a1b0cb3aab8b6e2843523ced602e5.jpg' " alt="" style="width: 40px;height: 40px;border-radius: 50%">
           <span style="color: white;margin-left: 5px">{{data.user.name}}</span>
         </div>
     </div>

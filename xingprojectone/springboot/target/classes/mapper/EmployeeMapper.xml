@@ -14,12 +14,12 @@
 
     
     <insert id="insert" parameterType="com.example.entity.Employee">
-        insert into `employee` (username,password,role,name,sex,no,age,descr,department_id)
-        values (#{username},#{password},#{role},#{name},#{sex},#{no},#{age},#{descr},#{departmentId})
+        insert into `employee` (username,password,role,name,sex,no,age,descr,department_id,avatar)
+        values (#{username},#{password},#{role},#{name},#{sex},#{no},#{age},#{descr},#{departmentId},#{avatar})
     </insert>
 
     <update id="updateById" parameterType="com.example.entity.Employee">
-        update `employee` set username=#{username},password=#{password},role=#{role},name=#{name},sex=#{sex},no=#{no},age=#{age},descr=#{descr},department_id=#{departmentId}
+        update `employee` set username=#{username},password=#{password},role=#{role},name=#{name},sex=#{sex},no=#{no},age=#{age},descr=#{descr},department_id=#{departmentId},avatar=#{avatar}
         where id=#{id}
     </update>
 </mapper>

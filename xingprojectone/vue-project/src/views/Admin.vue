@@ -17,6 +17,11 @@
       <el-table :data="data.tablebox" stripe @selection-change = "handleSelectChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column label="账号" prop="username"/>
+        <el-table-column label="头像">
+          <template #default="scope">
+            <img v-if="scope.row.avatar" :src="scope.row.avatar" style="display: block; width: 40px; height: 40px; border-radius: 50%">
+          </template>
+        </el-table-column>
         <el-table-column label="名称" prop="name"/>
 
         <el-table-column label="操作" width="120px">
@@ -42,7 +47,16 @@
 
 <el-dialog title="管理员信息" v-model="data.formVisible" width="500" destroy-on-close>
   <el-form ref="formRef" :rules="data.rules" :model="data.form" style="padding-right: 40px;padding-top: 20px "label-width="80px">
-    <el-form-item label="账号" prop="username"><el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号"/></el-form-item>
+    <el-form-item label="账号" prop="username"><el-input :disabled="data.form.id" v-model="data.form.username" autocomplete="off" placeholder="请输入账号"/></el-form-item>
+    <el-form-item label="头像">
+      <el-upload
+          action="http://localhost:9090/files/upload"
+          list-type="picture"
+          :on-success="handleAvatarSuccess"
+      >
+        <el-button type="primary">上传头像</el-button>
+      </el-upload>
+    </el-form-item>
     <el-form-item label="名称" prop="name"><el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称"/></el-form-item>
 
   </el-form>
@@ -84,7 +98,10 @@ const data=reactive({
     
   }
 })
-
+const handleAvatarSuccess = (res) => {
+  console.log(res.data)
+  data.form.avatar = res.data
+}
 const formRef = ref()
 
 const load =() => {
