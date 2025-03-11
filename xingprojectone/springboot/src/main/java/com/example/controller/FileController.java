@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文件相关的接口
@@ -30,13 +34,7 @@ public class FileController {
      */
         @PostMapping("/upload")
         public Result upload(MultipartFile file){ //文件流的形式接受前端发来的文件
-            if (file == null || file.isEmpty()) {
-                return Result.error();
-            }
             String originalFilename = file.getOriginalFilename(); // xxx.png
-            if (originalFilename == null || originalFilename.isEmpty()) {
-                return Result.error();
-            }
             if(!FileUtil.isDirectory(filePath)){
                 FileUtil.mkdir(filePath);
             }
@@ -77,6 +75,35 @@ public class FileController {
             e.printStackTrace();
             throw new CustomException("500","文件下载失败");
         }
+    }
+
+    @PostMapping("/wang/upload")
+    public Map<String,Object> wangEditorUpload(MultipartFile file){
+        String originalFilename = file.getOriginalFilename(); // xxx.png
+        if(!FileUtil.isDirectory(filePath)){
+            FileUtil.mkdir(filePath);
+        }
+        //提供文件存储的完整路径
+        //给文件名加一个唯一的表示标识
+        String fileName = System.currentTimeMillis() + originalFilename; //时间戳
+        String realPath = filePath + fileName;
+        try {
+            FileUtil.writeBytes(file.getBytes(),realPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new CustomException("500","文件上传失败");
+        }
+        //返回一个网络连接
+        //http://localhost:9090/files/upload
+        String url = "http://localhost:9090/files/download/" + fileName;
+        Map<String,Object> resMap = new HashMap<>();
+        List<Map<String,Object>> list = new ArrayList<>();
+        Map<String,Object> urlMap = new HashMap<>();
+        urlMap.put("url",url);
+        list.add(urlMap);
+        resMap.put("errno",0);
+        resMap.put("data",list);
+        return resMap;
     }
 
 }

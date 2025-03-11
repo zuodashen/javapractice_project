@@ -122,8 +122,18 @@
         <el-table-column prop="date" label="日期" width="180" header-align="center" stripe></el-table-column>
         <el-table-column prop="name" label="名称" width="180" header-align="center"></el-table-column>
         <el-table-column prop="address" label="地址" width="180" header-align="center"></el-table-column>
+        <el-table-column prop="content" label="内容" header-align="center">
+          <template #default="scope">
+            <div v-html="scope.row.content"> </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
+            <el-button type="primary"  @click="editContent(scope.row)">
+              编辑富文本
+            </el-button>
+
+
             <el-button
                 size="small"
                 type="primary"
@@ -166,6 +176,32 @@
       </div>
     </el-dialog>
 
+
+    <el-dialog v-model="data.formContentVisible" title="编辑内容" width="800">
+        <div style="padding: 20px">
+          <div style="border:1px solid #ccc;width:100%">
+            <Toolbar
+                style="border-bottom: 1px solid #ccc"
+                :editor="editorRef"
+                :mode="mode"
+            />
+            <Editor
+                style="height: 500px; overflow-y:hidden;"
+                v-model="data.form.content"
+                :mode="mode"
+                :defaultConfig="editorConfig"
+                @onCreated="handleCreated"
+            />
+          </div>
+        </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="data.formVisible = false">取 消</el-button>
+          <el-button type="primary" @click="save">保 存</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -176,11 +212,33 @@ import lun1 from '@/assets/lun1.png'
 import lun2 from '@/assets/lun2.png'
 import router from "@/router/index.js";
 import request from "@/utils/request.js";
+import '@wangeditor/editor/dist/css/style.css'
+import {onBeforeUnmount,ref,shallowRef} from "vue";
+import {Editor,Toolbar} from "@wangeditor/editor-for-vue";
 
 request.get('/employee/selectAll').then(res => {
   console.log(res)
   data.emplpueeList = res.data  //就是员工的列表数据 是一个数组
 })
+
+
+
+const baseUrl ='http://localhost:9090'
+const editorRef = shallowRef()//编辑器实例 必须用shallowRef
+const mode = 'default'
+const editorConfig = { MENU_CONF: {}}
+//组件销毁时，也及时销毁编辑器，否则可能会造成内存泄漏
+
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+//记录editor实例
+const handleCreated = (editor) => {
+  editorRef.value = editor
+}
+
 
 const del = (id)=>{
   alert("删除ID=" + id +"的数据")
@@ -206,28 +264,40 @@ const data = reactive({
   date1:'',
   daterange:'',
   tablebox:[
-    {id:1,date:'2022-01-01',name:'张三',address:'北京'},
+    {id:1,date:'2022-01-01',name:'张三',address:'北京',content:'<h1 style="color: red">哈哈哈</h1>'},
     {id:2,date:'2022-01-02',name:'李四',address:'上海'},
     {id:3,date:'2022-01-02',name:'李四',address:'上海'},
     {id:4,date:'2022-01-02',name:'李四',address:'上海'},
     {id:5,date:'2022-01-02',name:'李四',address:'上海'},
     {id:6,date:'2022-01-02',name:'李四',address:'上海'},
     {id:7,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:8,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:9,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:10,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:11,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:12,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:13,date:'2022-01-02',name:'李四',address:'上海'},
-    {id:14,date:'2022-01-01',name:'张三',address:'北京'}],
+ ],
     currentPage:1,
     pageSize:5,
     dialogVisible:false,
     row:null,
-    emplpueeList:[]
+    emplpueeList:[],
+    formContentVisible:false,
+    form:{}
 })
 console.log('获取到传递过来的id='+data.id)
 console.log('获取到传递过来的name='+data.name)
+
+const editContent = (row) => {
+  data.formContentVisible = true;
+  data.form = JSON.parse(JSON.stringify(row)); // 深度拷贝，避免直接修改原数据
+};
+
+
+const save = () => {
+  // 更新表格中的内容
+  const index = data.tablebox.findIndex(item => item.id === data.form.id);
+  if (index !== -1) {
+    data.tablebox[index] = { ...data.form };
+  }
+  // 关闭对话框
+  data.formContentVisible = false;
+};
 
 const url =
     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'

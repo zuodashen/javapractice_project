@@ -25,9 +25,17 @@
             系统首页
           </el-menu-item>
 
+
+
+
           <el-menu-item index="/manager/data">
             <el-icon><DataAnalysis/></el-icon>
             数据统计
+          </el-menu-item>
+
+          <el-menu-item index="/manager/article">
+            <el-icon><Document/></el-icon>
+            文章管理
           </el-menu-item>
 
           <el-sub-menu index="1">
@@ -71,7 +79,17 @@
 
 
 <script setup>
-import {Back, DataAnalysis, House, InfoFilled, Switch, SwitchButton, User, UserFilled} from "@element-plus/icons-vue";
+import {
+  Back,
+  DataAnalysis, Document,
+  House,
+  InfoFilled,
+  Reading,
+  Switch,
+  SwitchButton,
+  User,
+  UserFilled
+} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
 import {reactive,onMounted} from "vue";
 import {ElMessage} from "element-plus";
