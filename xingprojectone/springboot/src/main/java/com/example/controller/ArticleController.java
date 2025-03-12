@@ -26,7 +26,7 @@ public class ArticleController {
      * 更新数据
      */
     @PutMapping("/update")
-        public Result upadte(@RequestBody Article article){
+        public Result update(@RequestBody Article article){
         articleService.update(article);
         return Result.success();
     }

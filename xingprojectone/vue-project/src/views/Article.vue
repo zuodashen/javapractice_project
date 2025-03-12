@@ -56,7 +56,7 @@
     <el-form-item label="标题" prop="title"><el-input  v-model="data.form.title" autocomplete="off" placeholder="请输入标题"/></el-form-item>
     <el-form-item label="封面">
       <el-upload
-          action="http://localhost:9090/files/wang/upload"
+          action="http://localhost:9090/files/upload"
           list-type="picture"
           :on-success="handleImgSuccess"
       >

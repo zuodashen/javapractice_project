@@ -17,13 +17,7 @@ public class Article {
         this.title = title;
     }
 
-    public String getImg() {
-        return img;
-    }
 
-    public void setImg(String img) {
-        this.img = img;
-    }
 
     public String getDescription() {
         return description;
@@ -51,6 +45,15 @@ public class Article {
 
     private Integer id;
     private String title;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     private String img;
     private String description;
     private String content;

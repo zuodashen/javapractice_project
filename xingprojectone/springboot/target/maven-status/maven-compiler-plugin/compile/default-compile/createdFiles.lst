@@ -1,8 +1,13 @@
+com/example/entity/Article.class
+com/example/controller/FileController.class
+com/example/service/ArticleService.class
 com/example/exception/GlobalExceptionHandler.class
 com/example/entity/Employee.class
 com/example/entity/Account.class
+com/example/mapper/ArticleMapper.class
 com/example/exception/CustomException.class
 com/example/SpringbootApplication.class
+com/example/controller/ArticleController.class
 com/example/common/Result.class
 com/example/entity/Admin.class
 com/example/common/CorsConfig.class

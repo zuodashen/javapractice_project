@@ -79,7 +79,14 @@ public class FileController {
 
     @PostMapping("/wang/upload")
     public Map<String,Object> wangEditorUpload(MultipartFile file){
+        if (file == null || file.isEmpty()) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("errno", 1);
+            resultMap.put("errmsg", "文件不能为空");
+            return resultMap;
+        }
         String originalFilename = file.getOriginalFilename(); // xxx.png
+
         if(!FileUtil.isDirectory(filePath)){
             FileUtil.mkdir(filePath);
         }
