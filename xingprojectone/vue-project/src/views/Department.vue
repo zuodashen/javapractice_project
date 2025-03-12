@@ -39,28 +39,9 @@
       </div>
     </div>
 
-<el-dialog title="员工信息" v-model="data.formVisible" width="500" destroy-on-close>
+<el-dialog title="部门信息" v-model="data.formVisible" width="500" destroy-on-close>
   <el-form ref="formRef" :rules="data.rules" :model="data.form" style="padding-right: 40px;padding-top: 20px "label-width="80px">
-    <el-form-item label="账号" prop="username"><el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号" :disabled="data.form.id"/></el-form-item>
-    <el-form-item label="名称" prop="name"><el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称"/></el-form-item>
-    <el-form-item label="头像">
-      <el-upload
-          action="http://localhost:9090/files/upload"
-          list-type="picture"
-          :on-success="handleAvatarSuccess"
-      >
-        <el-button type="primary">上传头像</el-button>
-      </el-upload>
-    </el-form-item>
-    <el-form-item label="性别">
-      <el-radio-group v-model="data.form.sex">
-        <el-radio value="男" label="男"></el-radio>
-        <el-radio value="女" label="女"></el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="工号" prop="no" label-width="80px"><el-input v-model="data.form.no" autocomplete="off" placeholder="请输入工号"/></el-form-item>
-    <el-form-item label="年龄" label-width="80px"><el-input-number style="width: 160px" min="18" v-model="data.form.age" autocomplete="off" placeholder="请输入年龄"/></el-form-item>
-    <el-form-item label="个人介绍" label-width="80px"><el-input rows=3 type="textarea" v-model="data.form.descr" autocomplete="off" placeholder="请输入个人介绍"/></el-form-item>
+    <el-form-item label="名称" prop="name"><el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称" /></el-form-item>
   </el-form>
   <template #footer>
     <div class="dialog-footer">
@@ -91,26 +72,17 @@ const data=reactive({
   form:{},
   ids:[],
   rules:{
-    username:[
-      {required:true,message:'请输入账号',trigger:'blur'},
-    ],
     name:[
       {required:true,message:'请输入名称',trigger:'blur'},
     ],
-    no:[
-      {required:true,message:'请输入工号',trigger:'blur'},
-    ]
+
   }
 })
-const handleAvatarSuccess = (res) => {
-  console.log(res.data)
-  data.form.avatar = res.data
-}
 
 const formRef = ref()
 
 const load =() => {
-  request.get('employee/selectPage',{
+  request.get('department/selectPage',{
     params: {
       pageNum: data.pageNum,
       pageSize: data.pageSize,
@@ -141,7 +113,7 @@ const save = () => {  //在一个报错方法里面做2个操作，一个是新�
 }
 
 const add =() =>{
-  request.post('employee/add',data.form).then(res =>{      //新增的里面没有id
+  request.post('department/add',data.form).then(res =>{      //新增的里面没有id
     if(res.code === '200'){
       data.formVisible=false
       ElMessage.success('操作成功')
@@ -153,7 +125,7 @@ const add =() =>{
 }
 
 const update =() =>{
-  request.put('employee/update',data.form).then(res =>{   //编辑的对象里面包含id
+  request.put('department/update',data.form).then(res =>{   //编辑的对象里面包含id
     if(res.code === '200'){
       data.formVisible=false
       ElMessage.success('操作成功')
@@ -172,7 +144,7 @@ const handleUpdate = (row) =>{
 
 const del = (id) => {
   ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', {type: 'warning'}).then(() => {
-    request.delete('employee/deleteById/' + id).then(res => {
+    request.delete('department/deleteById/' + id).then(res => {
       if (res.code === '200') {
         ElMessage.success('操作成功')
         load() //删除数据后一定要重新加载最新数据
@@ -195,7 +167,7 @@ const delBatch = () => {
     return
   }
   ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', {type: 'warning'}).then(() => {
-    request.delete('employee/deleteBatch', {data: data.ids}).then(res => {
+    request.delete('department/deleteBatch', {data: data.ids}).then(res => {
       if (res.code === '200') {
         ElMessage.success('操作成功')
         load() //删除数据后一定要重新加载最新数据

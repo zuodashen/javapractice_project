@@ -115,6 +115,10 @@ const click = () => {
 
 上述代码中div ： 表示绑定
 
+##### V-model:
+
+
+
 ##### **button and click**
 
 ```vue
@@ -137,6 +141,8 @@ onMounted(()=>{
   console.log('页面加载完成')
 })
 ```
+
+
 
 ## ElementPlus
 
@@ -3693,15 +3699,55 @@ public Map<String,Object> wangEditorUpload(MultipartFile file){
 
 新建entity
 
+
+
 新建DepartmentController
+
+
 
 新建DepartmentService
 
+
+
 新建DepartmentMapper
+
+
 
 新建mapper.xml
 
 
 
+新建Department.vue
 
 
+
+### 关联员工：
+
+在编辑中加一个部门
+
+```vue
+<el-form-item label="部门">
+   <el-select style="width: 100%" v-model="data.form.departmentId">
+        <el-option v-for="item in data.departmentList" :key="item.id" :label="item.name" :value="item.id" ></el-option>
+      </el-select>
+</el-form-item>
+```
+
+#### 关联查询：
+
+在Employee.xml中坐关联查询找部门
+
+```sql
+<select id="selectAll" resultType="com.example.entity.Employee">
+    select employee.*,department.name as departmentName from employee
+    left join department on employee.department_id = department.id
+    <where>
+        <if test="name != null">employee.name like concat ('%',#{name},'%')</if>
+    </where>
+    order by employee.id desc
+</select>
+```
+
+在Employee的实体类中新增departmentName字段
+
+**修改完之后记得重启**

@@ -11,6 +11,15 @@ public class Employee extends Account {
     private Integer age;
     private String descr;
     private Integer departmentId;
+    private String departmentName;
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 
     public String getUsername() {
         return username;

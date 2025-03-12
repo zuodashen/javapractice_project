@@ -37,6 +37,11 @@
             <el-icon><Document/></el-icon>
             文章管理
           </el-menu-item>
+          <el-menu-item index="/manager/department">
+            <el-icon><OfficeBuilding /></el-icon>
+            部门管理
+          </el-menu-item>
+
 
           <el-sub-menu index="1">
             <template #title>
@@ -83,7 +88,7 @@ import {
   Back,
   DataAnalysis, Document,
   House,
-  InfoFilled,
+  InfoFilled, OfficeBuilding,
   Reading,
   Switch,
   SwitchButton,

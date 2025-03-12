@@ -5,11 +5,12 @@
 <mapper namespace="com.example.mapper.EmployeeMapper">
 
     <select id="selectAll" resultType="com.example.entity.Employee">
-        select * from employee
+        select employee.*,department.name as departmentName from employee
+        left join department on employee.department_id = department.id
         <where>
-            <if test="name != null">name like concat ('%',#{name},'%')</if>
+            <if test="name != null">employee.name like concat ('%',#{name},'%')</if>
         </where>
-        order by id desc
+        order by employee.id desc
     </select>
 
     

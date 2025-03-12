@@ -34,6 +34,11 @@ const router = createRouter({
           name: 'admin', // 修改为唯一的名称
           meta:{title:'管理员信息页面'},
           component: () => import('../views/Admin.vue') },
+        {
+          path: 'department',
+          name: 'department', // 修改为唯一的名称
+          meta:{title:'部门页面'},
+          component: () => import('../views/Department.vue') },
 
         {
           path: 'person',
