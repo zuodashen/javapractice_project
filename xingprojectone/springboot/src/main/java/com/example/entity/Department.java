@@ -3,8 +3,6 @@ package com.example.entity;
 /**
  * 部门信息
  */
-
-
 public class Department  {
         private Integer id;
         private String name;

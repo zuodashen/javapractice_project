@@ -1,6 +1,6 @@
 # 练手项目
 
-## 项目1：springboot+vue
+# 项目1：springboot+vue
 
 ### 项目初始环境配置见java学习.md
 
@@ -3699,27 +3699,446 @@ public Map<String,Object> wangEditorUpload(MultipartFile file){
 
 新建entity
 
+```java
+package com.example.entity;
 
+/**
+ * 部门信息
+ */
+
+
+public class Department  {
+        private Integer id;
+        private String name;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
 
 新建DepartmentController
 
+```java
+package com.example.controller;
 
+import com.example.common.Result;
+import com.example.entity.Department;
+import com.example.service.DepartmentService;
+import com.github.pagehelper.PageInfo;
+import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/department")
+public class DepartmentController {
+    @Resource
+    private DepartmentService departmentService;
+    /**
+     * 新增数据
+     */
+    @PostMapping("/add")
+    public Result add(@RequestBody Department department){
+        departmentService.add(department);
+        return Result.success();
+    }
+
+    /**
+     * 更新数据
+     */
+    @PutMapping("/update")
+        public Result upadte(@RequestBody Department department){
+        departmentService.update(department);
+        return Result.success();
+    }
+    /**
+     * 删除单个数据
+     */
+    @DeleteMapping("/deleteById/{id}")
+    public Result deleteById(@PathVariable Integer id){
+        departmentService.deleteById(id);
+        return Result.success();
+    }
+
+    /**
+     * 批量删除多行数据
+     */
+    @DeleteMapping("/deleteBatch")
+    public Result deleteBatch(@RequestBody List<Integer> ids){
+            departmentService.deleteBatch(ids);
+            return Result.success();
+    }
+
+
+    /**
+     * 查询所有员工信息
+     * @return
+     */
+    @GetMapping("/selectAll")
+    public Result selectAll(Department department){
+        List<Department> list = departmentService.selectAll(department);
+        return Result.success(list);
+    }
+
+
+//查询单个数据：
+    @GetMapping("/selectById/{id}")
+    public Result selectById(@PathVariable Integer id){
+        Department department = departmentService.selectById(id);
+        return Result.success(department);
+    }
+
+
+//查询单个数据：
+//    @GetMapping("/selectOne")
+//    public Result selectOne(@RequestParam Integer id){
+//        Department department = departmentService.selectById(id);
+//        return Result.success(department);
+//    }
+//    @GetMapping("/selectList")
+//    public Result selectList(Department department){
+//        List<Department> list = departmentService.selectList(department);
+//        return Result.success(list);
+//    }
+    /**
+     * 分页查询
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/selectPage")
+    public Result selectPage(Department department,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize){
+        PageInfo<Department> pageInfo = departmentService.selectPage(department,pageNum,pageSize);
+        return Result.success(pageInfo);
+    }
+
+}
+```
 
 新建DepartmentService
 
+```java
+package com.example.service;
+import cn.hutool.core.util.StrUtil;
+import com.example.entity.Account;
+import com.example.entity.Department;
+import com.example.exception.CustomException;
+import com.example.mapper.DepartmentMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
+public class DepartmentService {
+
+    @Resource
+    private DepartmentMapper departmentMapper;
+
+
+
+    public List<Department> selectAll(Department department) {
+        return departmentMapper.selectAll(department);
+    }
+
+    public Department selectById(Integer id) {
+        return departmentMapper.selectById(id);
+    }
+
+    public PageInfo<Department> selectPage(Department department,Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<Department> lsit=departmentMapper.selectAll(department);
+        return PageInfo.of(lsit);
+    }
+
+    
+    public void add(Department department) {
+
+            departmentMapper.insert(department);
+    }
+
+
+    public void update(Department department) {
+        departmentMapper.updateById(department);
+    }
+
+    public void deleteById(Integer id) {
+        departmentMapper.deleteById(id);
+    }
+    public void deleteBatch(List <Integer> ids) {
+        for(Integer id:ids){
+            this.deleteById(id);
+        }
+    }
+
+
+}
+```
 
 新建DepartmentMapper
 
+```java
+package com.example.mapper;
 
+
+import com.example.entity.Department;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+public interface DepartmentMapper {
+
+    List<Department> selectAll(Department department);
+
+    @Select("select * from `department` where id = #{id}")
+    Department selectById(Integer id);
+
+    void insert(Department department);
+
+    void updateById(Department department);
+
+    @Delete("delete from `department` where id = #{id}")
+    void deleteById(Integer id);
+    
+
+}
+```
 
 新建mapper.xml
 
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.DepartmentMapper">
 
+    <select id="selectAll" resultType="com.example.entity.Department">
+        select * from department
+        <where>
+            <if test="name != null">name like concat ('%',#{name},'%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    
+    <insert id="insert" parameterType="com.example.entity.Department">
+        insert into `department` (name)
+        values (#{name})
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Department">
+        update `department` set name=#{name}
+        where id=#{id}
+    </update>
+</mapper>
+```
 
 新建Department.vue
 
+```vue
+<template>
+  <div>
+    <div class="card" style="margin-bottom: 5px">
+      <el-input style="width: 240px; margin-right: 10px" v-model="data.name"placeholder="请输入名称查询"prefix-icon="Search"></el-input>
+      <el-button type="primary" @click="load">查询</el-button>
+      <el-button type="warning" @click="reset">重置</el-button>
+    </div>
 
+    <div class="card" style="margin-bottom: 5px">
+      <el-button type="primary" @click="handleAdd">新 增</el-button>
+      <el-button type="danger" @click="delBatch(data.ids)">批量删除</el-button>
+<!--      <el-button type="info">导入</el-button>-->
+<!--      <el-button type="success">导出</el-button>-->
+    </div>
+
+    <div class="card" style="margin-bottom: 5px">
+      <el-table :data="data.tablebox" stripe @selection-change = "handleSelectChange">
+        <el-table-column type="selection" width="55"/>
+        <el-table-column label="名称" prop="name"/>
+
+        <el-table-column label="操作" width="120px">
+          <template #default="scope">
+            <el-button @click="handleUpdate(scope.row)" type="primary" :icon="Edit" circle></el-button>
+            <el-button @click="del(scope.row.id)" type="danger" :icon="Delete" circle></el-button>
+          </template>
+          </el-table-column>
+      </el-table>
+      <div style="margin-top: 15px">
+        <el-pagination
+            @size-change="load"
+            @current-change="load"
+            v-model:current-page="data.pageNum"
+            v-model:page-size="data.pageSize"
+            :page-sizes="[5, 10, 15, 20]"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="data.total"
+        />
+      </div>
+    </div>
+
+<el-dialog title="部门信息" v-model="data.formVisible" width="500" destroy-on-close>
+  <el-form ref="formRef" :rules="data.rules" :model="data.form" style="padding-right: 40px;padding-top: 20px "label-width="80px">
+    <el-form-item label="名称" prop="name"><el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称" /></el-form-item>
+  </el-form>
+  <template #footer>
+    <div class="dialog-footer">
+      <el-button @click="data.formVisible = false">取 消</el-button>
+      <el-button type="primary" @click="save">保 存</el-button>
+    </div>
+  </template>
+</el-dialog>
+<
+
+  </div>
+</template>
+
+<script setup>
+import {reactive,ref} from "vue";
+import {Delete, Search,Edit} from "@element-plus/icons-vue";
+import request from "@/utils/request.js";
+import {ElMessage,ElMessageBox} from "element-plus";
+
+
+const data=reactive({
+  name:null,
+  tablebox:[],
+  pageNum:1,
+  pageSize:5,
+  total:0,
+  formVisible:false,
+  form:{},
+  ids:[],
+  rules:{
+    name:[
+      {required:true,message:'请输入名称',trigger:'blur'},
+    ],
+
+  }
+})
+
+const formRef = ref()
+
+const load =() => {
+  request.get('department/selectPage',{
+    params: {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      name:data.name
+    }
+  }).then(res => {
+    data.tablebox = res.data.list,
+        data.total=res.data.total
+  })
+}
+load()
+
+const reset =() => {
+  data.name=null
+  load()
+}
+
+const handleAdd =() =>{
+  data.formVisible=true
+  data.form={}
+}
+const save = () => {  //在一个报错方法里面做2个操作，一个是新增，一个是编辑
+  formRef.value.validate((valid) => {
+    if (valid) {
+      data.form.id ? update() : add()
+    }
+  })
+}
+
+const add =() =>{
+  request.post('department/add',data.form).then(res =>{      //新增的里面没有id
+    if(res.code === '200'){
+      data.formVisible=false
+      ElMessage.success('操作成功')
+      load()  //新增后一定要重新加载最新的数据
+    }else {
+      ElMessage.error(res.msg)
+    }
+  })
+}
+
+const update =() =>{
+  request.put('department/update',data.form).then(res =>{   //编辑的对象里面包含id
+    if(res.code === '200'){
+      data.formVisible=false
+      ElMessage.success('操作成功')
+      load()  //更新后一定要重新加载最新的数据
+    }else {
+      ElMessage.error(res.msg)
+    }
+  })
+}
+
+
+const handleUpdate = (row) =>{
+    data.form = JSON.parse(JSON.stringify(row)) ////深拷贝一个新的对象，用于编辑，这样就不会影响行对象
+    data.formVisible=true
+}
+
+const del = (id) => {
+  ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', {type: 'warning'}).then(() => {
+    request.delete('department/deleteById/' + id).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('操作成功')
+        load() //删除数据后一定要重新加载最新数据
+      } else {
+        ElMessage.error(res.msg)
+      }
+    })
+  }).catch()
+}
+
+const handleSelectChange = (rows) => {  //返回所有选中的行对象数组
+  //从选中的行数组里面取出所有行的id组成一个新的数组
+  data.ids = rows.map(row => row.id)
+  console.log(data.ids)
+}
+
+const delBatch = () => {
+  if (data.ids.length === 0){
+    ElMessage.warning('请选择要删除的数据')
+    return
+  }
+  ElMessageBox.confirm('删除数据后无法恢复，您确认删除吗？', '删除确认', {type: 'warning'}).then(() => {
+    request.delete('department/deleteBatch', {data: data.ids}).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('操作成功')
+        load() //删除数据后一定要重新加载最新数据
+      } else {
+        ElMessage.error(res.msg)
+      }
+    })
+  }).catch()
+}
+
+
+</script>
+```
 
 ### 关联员工：
 
@@ -3751,3 +4170,504 @@ public Map<String,Object> wangEditorUpload(MultipartFile file){
 在Employee的实体类中新增departmentName字段
 
 **修改完之后记得重启**
+
+### 导出数据到Excel：
+
+```vue
+ <el-button type="success" @click="exportData">导出</el-button>
+导出的方法：
+const exportData = () => {
+    //导出数据是通过流的形式下载 excel   下载文件是通过流  request请求是获得json数据
+    //打开流的连接，浏览器会自动帮下载文件
+    window.open("http://localhost:9090/employee/export")
+}
+```
+
+在employee中新增接口：
+
+```java
+@GetMapping("/export")
+public void export(HttpServletResponse response) throws IOException {
+    //1.拿到所有的员工数据
+    List<Employee> employeeList = employeeService.selectAll(null);
+    //2.构建Excelwriter 这是hutool提供的工具类
+    ExcelWriter writer = ExcelUtil.getWriter(true);
+    //3.设置中文表头
+    writer.addHeaderAlias("username","账号");
+   writer.addHeaderAlias("name","名称");
+        writer.addHeaderAlias("sex","性别");
+        writer.addHeaderAlias("no","工号");
+        writer.addHeaderAlias("age","年龄");
+        writer.addHeaderAlias("descr","个人介绍");
+        writer.addHeaderAlias("departmentName","部门");
+  //默认的，未添加alias的属性也会写出，如果想只写出加了别名的字段，可以调用此方法排除
+		writer.setOnlyAlias(true);
+    //4. 写出数据到writer
+    writer.write(employeeList,true);
+    //5.设置输出到文件的名称 以及输出流的头信息
+    //设置浏览器响应的格式
+    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+    String fileName = URLEncoder.encode("员工信息", StandardCharsets.UTF_8);
+    response.setHeader("Content-Disposition","attachment;filename=" + fileName + ".xlsx");
+    //6.写出到输出流并关闭writer
+    ServletOutputStream os = response.getOutputStream();
+    writer.flush(os);
+    writer.close();
+
+
+}
+```
+
+报错了：get failure  	
+
+需要引入：处理文档的依赖
+
+```xml
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>5.3.0</version>
+</dependency>
+```
+
+发现我的密码也被导出来了！
+
+有潜在bug 需要在controller的接口中添加：
+
+```java
+//默认的，未添加alias的属性也会写出，如果想只写出加了别名的字段，可以调用此方法排除
+writer.setOnlyAlias(true);
+```
+
+此时只会导出员工账号,后**导出完整的excel**
+
+### 从Excel导入数据：
+
+添加接口
+
+```java
+@PostMapping("import")
+public Result imp(MultipartFile file) throws Exception {
+//1.拿到输入流 构建reader
+InputStream inputStream = file.getInputStream();
+ExcelReader reader = ExcelUtil.getReader(inputStream);
+//2.读取excel里面的数据
+List<Employee> employeeList = reader.readAll(Employee.class);
+//3.写入List到数据库
+for (Employee employee : employeeList){
+    employeeService.add(employee);
+}
+return Result.success();
+}
+```
+
+前端中加入文件上传的事件：
+
+```vue
+<el-upload
+    style="display: inline-block;margin: 0 10px"
+    action="http://localhost:9090/employee/import"
+    :show-file-list="false"
+    :on-success="importsuccess"
+>
+<el-button type="info">导入</el-button>
+</el-upload>
+
+
+const importsuccess=() =>{
+  ElMessage.success('批量数据导入成功')
+  load()
+}
+```
+
+有bug 部门未导入 ，需要在数据库表中增加部门字段才行
+
+或者部门显示实际上用的是id，但是excel表中使用了部门名称，所以没能显示，自己改下就好了
+
+
+
+## 数据统计图表功能： 
+
+####  Echarts
+
+**到vue的目录下  npm i  echarts -S   会在package.json中看到**
+
+引入onMounted
+
+Data.vue
+
+#### 静态的Echarts：
+
+```vue
+<template>
+  <div>
+    <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="line" style="width: 600px;height: 400px"></div>
+
+  </div>
+
+</template>
+
+
+<script setup>
+import {reactive,onMounted} from "vue";
+import * as echarts from "echarts"
+
+const  data = reactive({
+})
+const option ={
+  title: {
+    text: 'ECharts 入门示例'
+  },
+  tooltip: {},
+  legend: {
+    data: ['销量','访问量']
+  },
+  xAxis: {
+    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '销量',
+      type: 'bar',
+      data: [5, 20, 36, 10, 10, 20]
+    },
+    {
+      data: [15, 23, 24, 28, 15, 17, 20],
+      type: 'line',
+      smooth: true,
+      name: '访问量'
+    },
+  ]
+}
+
+const option1={
+  title:{
+    text:'ECharts 折线图'
+  },
+  xAxis: {
+    type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [150, 230, 224, 218, 135, 147, 260],
+      type: 'line',
+      smooth: true,
+      name: '访问量'
+    },
+    {
+      data: [188, 260, 290, 28, 135, 147, 200],
+      type: 'line',
+      smooth: true,
+      name: '销售额'
+    }
+  ]
+}
+
+//onMounted表示页面的所有元素都初始化完成
+onMounted(()=>{
+//基于准备好的dom，初始化echarts实例
+  const myChart = echarts.init(document.getElementById('main'))
+//使用刚指定的配置项和数据显示图标
+  myChart.setOption(option)
+
+  const myChart1 = echarts.init(document.getElementById('line'))
+//使用刚指定的配置项和数据显示图标
+  myChart1.setOption(option1)
+
+})
+
+</script>
+
+<style scoped>
+
+</style>
+```
+
+#### 动态Echarts：
+
+##### 后端接口：
+
+###### bar柱状图：员工数量
+
+ webcontroller
+
+**关于stream流**
+
+**重难点在后端接口的逻辑实现：**
+
+```java
+@GetMapping("/barData")
+public Result getBarData(){
+    Map<String,Object> map =new HashMap<>();
+    List<Employee> employeeList = employeeService.selectAll(null);
+    Set<String> departmentNameSet =employeeList.stream().map(Employee::getDepartmentName).collect(Collectors.toSet());
+    map.put("department",departmentNameSet); //x轴数据
+    List<Long> countList = new ArrayList<>();
+    for (String departmentName : departmentNameSet) {
+        // 统计这个部门下面的员工数量
+        long count = employeeList.stream()
+                .filter(employee -> departmentName != null && departmentName.equals(employee.getDepartmentName()))
+                .count();
+        countList.add(count);
+    }
+    map.put("count",countList); //y轴员工数量的数据
+    return Result.success(map);
+}
+```
+
+前端逻辑：
+
+```vue
+onMounted(()=>{
+//基于准备好的dom，初始化echarts实例
+  const barChart = echarts.init(document.getElementById('bar'))
+  request.get('/barData').then(res=>{
+    barOption.xAxis.data = res.data.department //横轴数据
+    barOption.series[0].data = res.data.count     //纵轴数据
+    //使用刚指定的配置项和数据显示图标
+    barChart.setOption(barOption)
+    console.log(res)
+  })
+})
+```
+
+**柱状图设置不同的颜色：在data中添加**
+
+```vue
+itemStyle: {
+  normal:{
+    color: function () {
+      return '#'+Math.floor(Math.random()*(256*256-19)).toString(16);
+    }
+  }
+```
+
+###### line折线图：文章发布时间
+
+```java
+@GetMapping("/lineData")
+public Result getLineData(){
+    Map<String,Object> map = new HashMap<>();
+    Date date = new Date();
+    DateTime start = DateUtil.offsetDay(date,-7);
+    List<DateTime> dataTimeList = DateUtil.rangeToList(start,date, DateField.DAY_OF_YEAR);
+    //把Datetime类型的日期转换成字符串类型的日期
+    List<String> dateStrList = dataTimeList.stream().map(dateTime->DateUtil.format(dateTime,"MM月dd日"))
+            .sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+    map.put("date",dateStrList);//x轴的数据
+    List<Integer> countList = new ArrayList<>();
+
+    for (DateTime day : dataTimeList){
+        //10月22日  格式要匹配
+        String dayFormat = DateUtil.formatDate(day);
+        //获取当天所有的文章数量
+        Integer count = articleService.selectCountByDate(dayFormat);
+        countList.add(count);
+    }
+    map.put("count", countList); //y轴的发布文章的数量
+    return Result.success(map);
+}
+```
+
+此时需要新增有关文章的一系列接口 方法 和sql查询
+
+分别在ArticleService和ArticelMapper中添加
+
+###### pie饼图：各部门员工数量
+
+```java
+@GetMapping("/pieData")
+public Result getPieData(){
+    List<Map<String,Object>> list = new ArrayList<>();
+    List<Employee> employeeList = employeeService.selectAll(null);
+    Set<String> departmentNameSet =employeeList.stream().map(Employee::getDepartmentName).collect(Collectors.toSet());
+    List<Long> countList = new ArrayList<>();
+    for (String departmentName : departmentNameSet) {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("name",departmentName);
+        // 统计这个部门下面的员工数量
+        long count = employeeList.stream()
+                .filter(employee -> departmentName != null && departmentName.equals(employee.getDepartmentName()))
+                .count();
+        map.put("value",count);
+        list.add(map);
+    }
+    return Result.success(list);
+}
+```
+
+##### **前端页面：**
+
+```vue
+<template>
+  <div>
+   <div style="display: flex; grid-gap: 10px;justify-content: flex-start; margin-bottom:10px ">
+     <div class="card" style="padding: 20px; width: 50%;height: 400px" id="bar"></div>
+     <div class="card" style="padding: 20px; width: 50%;height: 400px" id="line"></div>
+   </div>
+
+    <div style="display: flex; grid-gap: 10px;margin-bottom:10px ">
+      <div class="card" style="padding: 20px; width: calc(50% - 45px);height: 400px" id="pie"></div>
+    </div>
+<!--    另一种对齐的布局方式-->
+<!--    <el-row :gutter="10">-->
+<!--      <el-clo :span="12" style="margin-bottom: 10px">-->
+<!--        <div class="card" style="padding: 20px; height: 400px" id="bar"></div>-->
+<!--      </el-clo>-->
+<!--      <el-clo :span="12" style="margin-bottom: 10px">-->
+<!--        <div class="card" style="padding: 20px; height: 400px" id="line"></div>-->
+<!--      </el-clo>-->
+<!--      <el-clo :span="12" style="margin-bottom: 10px">-->
+<!--        <div class="card" style="padding: 20px; height: 400px" id="pie"></div>-->
+<!--      </el-clo>-->
+<!--    </el-row>-->
+
+
+  </div>
+</template>
+
+
+<script setup>
+import {reactive,onMounted} from "vue";
+import * as echarts from "echarts"
+import request from "@/utils/request.js";
+
+const  data = reactive({
+
+
+})
+const barOption ={
+  title: {
+    text: '各部门员工数量'
+  },
+  tooltip: {},
+  legend: {
+    trigger:'item'
+  },
+  xAxis: {
+    data: []
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '人数',
+      type: 'bar',
+      data: [],
+      itemStyle: {
+        normal:{
+          color: function () {
+            return '#'+Math.floor(Math.random()*(256*256-19)).toString(16);
+          }
+        }
+      }
+    },
+  ]
+};
+const lineOption ={
+  title: {
+    text: '近七天发布文章数量'
+  },
+  tooltip: {},
+  legend: {
+    trigger:'item'
+  },
+  xAxis: {
+    data: []
+  },
+  yAxis: {},
+  series: [
+    {
+      name: '发布数量',
+      type: 'line',
+      data: [],
+      smooth:true
+    },
+  ]
+};
+
+const pieOption ={
+  title: {
+    text: '各部门员工数量比例图',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    orient: 'vertical',
+    left: 'left'
+  },
+  series: [
+    {
+      name: '员工数量',
+      type: 'pie',
+      radius: '50%',
+      data: [],
+      center:['50%','60%'],
+      label:{
+        formatter: '{b}: {@2012} ({d}%)'
+      },
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      }
+    }
+  ]
+}
+
+
+onMounted(()=>{
+//基于准备好的dom，初始化echarts实例
+  const barChart = echarts.init(document.getElementById('bar'))
+  request.get('/barData').then(res=>{
+    barOption.xAxis.data = res.data.department //横轴数据
+    barOption.series[0].data = res.data.count     //纵轴数据
+    //使用刚指定的配置项和数据显示图标
+    barChart.setOption(barOption)
+    console.log(res)
+  })
+  const lineChart = echarts.init(document.getElementById('line'))
+  request.get('/lineData').then(res=>{
+    lineOption.xAxis.data = res.data.date
+    lineOption.series[0].data = res.data.count
+    lineChart.setOption(lineOption)
+    console.log(res)
+  })
+  const pieChart = echarts.init(document.getElementById('pie'))
+  request.get('/pieData').then(res=>{
+    pieOption.series[0].data = res.data
+    pieChart.setOption(pieOption)
+    console.log(res)
+  })
+
+})
+
+</script>
+
+<style scoped>
+
+</style>
+```
+
+# 项目二：
+
+
+
+
+
+
+
+
+
+
+

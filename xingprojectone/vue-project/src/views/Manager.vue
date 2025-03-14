@@ -33,17 +33,17 @@
             数据统计
           </el-menu-item>
 
-          <el-menu-item index="/manager/article">
+          <el-menu-item index="/manager/article" v-if="data.user.role === 'ADMIN' ">
             <el-icon><Document/></el-icon>
             文章管理
           </el-menu-item>
-          <el-menu-item index="/manager/department">
+          <el-menu-item index="/manager/department " v-if="data.user.role === 'ADMIN' ">
             <el-icon><OfficeBuilding /></el-icon>
             部门管理
           </el-menu-item>
 
 
-          <el-sub-menu index="1">
+          <el-sub-menu index="1" v-if="data.user.role === 'ADMIN' ">
             <template #title>
               <el-icon><User /></el-icon>
               <span>用户管理</span>

@@ -1483,7 +1483,7 @@ var resolveConfig_default = (config) => {
   const newConfig = mergeConfig({}, config);
   let { data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth } = newConfig;
   newConfig.headers = headers = AxiosHeaders_default.from(headers);
-  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url, newConfig.allowAbsoluteUrls), config.params, config.paramsSerializer);
   if (auth) {
     headers.set(
       "Authorization",
@@ -2015,7 +2015,7 @@ function dispatchRequest(config) {
 }
 
 // node_modules/axios/lib/env/data.js
-var VERSION = "1.8.1";
+var VERSION = "1.8.3";
 
 // node_modules/axios/lib/helpers/validator.js
 var validators = {};

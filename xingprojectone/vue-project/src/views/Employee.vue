@@ -9,8 +9,15 @@
     <div class="card" style="margin-bottom: 5px">
       <el-button type="primary" @click="handleAdd">新 增</el-button>
       <el-button type="danger" @click="delBatch(data.ids)">批量删除</el-button>
-<!--      <el-button type="info">导入</el-button>-->
-<!--      <el-button type="success">导出</el-button>-->
+      <el-upload
+          style="display: inline-block;margin: 0 10px"
+          action="http://localhost:9090/employee/import"
+          :show-file-list="false"
+          :on-success="importsuccess"
+      >
+      <el-button type="info">导入</el-button>
+      </el-upload>
+        <el-button type="success" @click="exportData">导出</el-button>
     </div>
 
     <div class="card" style="margin-bottom: 5px">
@@ -118,6 +125,13 @@ const data=reactive({
     ]
   }
 })
+
+const exportData = () => {
+    //导出数据是通过流的形式下载 excel   下载文件是通过流  request请求是获得json数据
+    //打开流的连接，浏览器会自动帮下载文件
+    window.open("http://localhost:9090/employee/export")
+}
+
 const handleAvatarSuccess = (res) => {
   console.log(res.data)
   data.form.avatar = res.data
@@ -128,6 +142,11 @@ request.get('/department/selectAll').then(res=>{
 })
 
 const formRef = ref()
+
+const importsuccess=() =>{
+  ElMessage.success('批量数据导入成功')
+  load()
+}
 
 const load =() => {
   request.get('employee/selectPage',{
