@@ -708,9 +708,9 @@ application.properties ->改为 application.yml
 
 删除pom.xml中没用的依赖
 
-修改包名的时候记得对应修改 pom.xml中的groupid
+修改包名的时候记得对应修改 pom.xml中的group id
 
-##### 配置springboot：
+##### 配置springboot(：
 
 ![设置编码](/Users/ruixianli/Desktop/jie/project1的proceed screen/设置编码.png)在设置（preference)中，找到encoding 进行相应**maven设置**    
 

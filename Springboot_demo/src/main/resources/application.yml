@@ -1,0 +1,25 @@
+server:
+  9090
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/ssmbuild?useUnicode=true&characterEncoding=utf-8&allowWMultiQuries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+
+hikari:
+  pool-name: HikariPool
+  auto-commit: true
+  connection-timeout: 30000
+  maximum-pool-size: 10
+  minimum-idle: 5
+
+  jpa:
+    hibernate:
+#\u81EA\u52A8\u66F4\u65B0\u6570\u636E\u5E93\u8868\u7ED3\u6784
+      ddl-auto: update
+      #\u683C\u5F0F\u5316
+    properties:
+      hibernate.format_sql: true
+      #\u663E\u793Asql
+    show-sql: true
