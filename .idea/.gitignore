@@ -1,8 +1,75 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# Compiled class file
+*.class
+
+# vue
+node_modules/
+jspm_packages/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+pids
+*.pid
+*.seed
+*.pid.lock
+.vscode
+.nuxt
+.cache
+.yarn-integrity
+.npm
+.node_repl_history
+.grunt
+
+# package file
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar
+*.tar.gz
+*.gz
+*.rar
+*.pid
+*.orig
+
+# maven ignore
+target/
+
+# Gradle
+build
+.gradle
+
+# out
+**/out/
+
+# eclipse ignore
+.settings/
+.project
+.classpatch
+
+# Intellij idea
+.idea/
+/idea/
+*.ipr
+*.iml
+*.iws
+
+# temp file
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+.svn
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# system ignore
+.DS_Store
+Thumbs.db
